@@ -1,0 +1,107 @@
+# Garage Legends — 5-Table SQL Backend Walkthrough
+
+## Summary
+
+Expanded the Garage Legends automotive showroom from **2 tables → 5 tables** with full user authentication, test drive bookings, vehicle reviews, and a password-protected admin panel. All SQL queries use **JOINs** and the schema includes **triggers**.
+
+---
+
+## 5 SQL Tables
+
+| # | Table | Purpose | Key SQL Features |
+|---|---|---|---|
+| 1 | `users` | Sign up / Login with bcrypt | Unique constraints |
+| 2 | `vehicles` | Showroom data + ratings | Updated by triggers |
+| 3 | `contacts` | Contact form submissions | FK → users (LEFT JOIN) |
+| 4 | `test_drive_bookings` | Test drive reservations | FK → users, FK → vehicles (INNER JOINs) |
+| 5 | `reviews` | Star ratings + comments | FK → users, FK → vehicles, UNIQUE constraint |
+
+### SQL Features Demonstrated
+- **JOINs**: `INNER JOIN`, `LEFT JOIN` used in admin queries (bookings + users + vehicles, reviews + users, contacts + users, users + bookings + reviews)
+- **Triggers**: `after_review_insert` and `after_review_delete` automatically update `vehicles.avg_rating` and `vehicles.review_count`
+- **Aggregate functions**: `COUNT()`, `AVG()`, `ROUND()` in triggers and admin stats
+- **Foreign keys**: All tables properly linked with `ON DELETE CASCADE` / `ON DELETE SET NULL`
+
+---
+
+## New Pages
+
+| Page | URL | Purpose |
+|---|---|---|
+| Sign Up | `/signup.html` | User registration |
+| Log In | `/login.html` | Authentication |
+| My Bookings | `/bookings.html` | User's test drive dashboard |
+| Admin | `/admin.html` | Password-protected admin panel |
+
+---
+
+## Updated Pages
+
+- **`index.html`** — Navbar shows Login/Signup buttons or username + Logout
+- **`contact.html`** — Auto-fills name/email for logged-in users
+- **All 8 vehicle detail pages** — Added booking form + reviews section
+
+---
+
+## Admin Panel
+
+Accessible at `/admin.html` with credentials:
+- **Email**: `admin@garagelegends.com`
+- **Password**: `admin123`
+
+Features: Stats dashboard, tabbed tables for Bookings/Messages/Reviews/Users, Confirm/Cancel booking actions.
+
+---
+
+## Verified Screenshots
+
+### Homepage with Auth Buttons
+![Homepage](C:/Users/Taran N/.gemini/antigravity/brain/afe5d7c5-1c26-4116-b42f-bce1bf9e4d67/homepage_initial_1777561290139.png)
+
+### Sign Up Page
+![Signup](C:/Users/Taran N/.gemini/antigravity/brain/afe5d7c5-1c26-4116-b42f-bce1bf9e4d67/signup_form_filled_1777561369801.png)
+
+### Logged In State
+![Logged In](C:/Users/Taran N/.gemini/antigravity/brain/afe5d7c5-1c26-4116-b42f-bce1bf9e4d67/homepage_logged_in_1777561396345.png)
+
+### Test Drive Booking
+````carousel
+![Booking Form](C:/Users/Taran N/.gemini/antigravity/brain/afe5d7c5-1c26-4116-b42f-bce1bf9e4d67/mustang_booking_form_1777561482780.png)
+<!-- slide -->
+![Booking Success](C:/Users/Taran N/.gemini/antigravity/brain/afe5d7c5-1c26-4116-b42f-bce1bf9e4d67/booking_success_1777561520784.png)
+````
+
+### Review Submission
+![Review](C:/Users/Taran N/.gemini/antigravity/brain/afe5d7c5-1c26-4116-b42f-bce1bf9e4d67/review_submitted_1777561554750.png)
+
+### My Bookings Dashboard
+![My Bookings](C:/Users/Taran N/.gemini/antigravity/brain/afe5d7c5-1c26-4116-b42f-bce1bf9e4d67/my_bookings_page_1777561565943.png)
+
+### Admin Panel
+````carousel
+![Admin Dashboard](C:/Users/Taran N/.gemini/antigravity/brain/afe5d7c5-1c26-4116-b42f-bce1bf9e4d67/admin_dashboard_bookings_1777561660539.png)
+<!-- slide -->
+![Admin Reviews](C:/Users/Taran N/.gemini/antigravity/brain/afe5d7c5-1c26-4116-b42f-bce1bf9e4d67/admin_reviews_tab_1777561682161.png)
+<!-- slide -->
+![Admin Users](C:/Users/Taran N/.gemini/antigravity/brain/afe5d7c5-1c26-4116-b42f-bce1bf9e4d67/admin_users_tab_1777561691552.png)
+````
+
+---
+
+## How to Run
+
+```bash
+# 1. Run the schema in MySQL
+mysql -u root -pRoot < schema.sql
+
+# 2. Start the server
+node server.js
+# → http://localhost:3000
+```
+
+## Key Credentials
+
+| Account | Email | Password |
+|---|---|---|
+| Admin | admin@garagelegends.com | admin123 |
+| Test User | test@example.com | test123 |
