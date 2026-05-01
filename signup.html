@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up - Garage Legends</title>
+  <meta name="description" content="Create your Garage Legends account to book test drives and review legendary vehicles.">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="ambient-scene">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+  </div>
+
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="logo" style="text-decoration:none;">
+        <span class="logo-accent">GARAGE</span> LEGENDS
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Showroom</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li>
+          <div class="nav-auth" id="navAuth">
+            <a href="login.html" class="btn-nav btn-nav-outline">Log In</a>
+            <a href="signup.html" class="btn-nav btn-nav-filled">Sign Up</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="auth-page">
+    <div class="auth-card reveal active">
+      <h2>CREATE <span style="color: var(--accent);">ACCOUNT</span></h2>
+      <p class="auth-subtitle">Join the garage. Book test drives. Share reviews.</p>
+
+      <form id="signupForm">
+        <div class="form-group">
+          <label for="signupUsername">Username</label>
+          <input type="text" id="signupUsername" name="username" placeholder="gearhead42" required minlength="3">
+        </div>
+        <div class="form-group">
+          <label for="signupEmail">Email</label>
+          <input type="email" id="signupEmail" name="email" placeholder="you@example.com" required>
+        </div>
+        <div class="form-group">
+          <label for="signupPassword">Password</label>
+          <div class="password-wrapper">
+            <input type="password" id="signupPassword" name="password" placeholder="Min 6 characters" required minlength="6">
+            <button type="button" class="password-toggle" onclick="togglePassword('signupPassword', this)">👁</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="signupConfirm">Confirm Password</label>
+          <div class="password-wrapper">
+            <input type="password" id="signupConfirm" placeholder="Re-enter password" required>
+            <button type="button" class="password-toggle" onclick="togglePassword('signupConfirm', this)">👁</button>
+          </div>
+        </div>
+        <button type="submit" id="signupBtn" class="btn-primary" style="width: 100%;">Create Account</button>
+        <div id="signupStatus" class="form-status"></div>
+      </form>
+
+      <div class="auth-footer">
+        Already have an account? <a href="login.html">Log In</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
