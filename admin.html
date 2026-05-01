@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - Garage Legends</title>
+  <meta name="description" content="Admin dashboard for managing Garage Legends.">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="ambient-scene">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+  </div>
+
+  <!-- Admin Login Gate -->
+  <div class="admin-login-page" id="adminLoginGate">
+    <div class="auth-card reveal active">
+      <h2>ADMIN <span style="color: var(--accent);">ACCESS</span></h2>
+      <p class="auth-subtitle">Restricted area. Enter admin credentials.</p>
+
+      <form id="adminLoginForm">
+        <div class="form-group">
+          <label for="adminEmail">Admin Email</label>
+          <input type="email" id="adminEmail" placeholder="admin@garagelegends.com" required>
+        </div>
+        <div class="form-group">
+          <label for="adminPassword">Password</label>
+          <div class="password-wrapper">
+            <input type="password" id="adminPassword" placeholder="Enter admin password" required>
+            <button type="button" class="password-toggle" onclick="togglePassword('adminPassword', this)">👁</button>
+          </div>
+        </div>
+        <button type="submit" class="btn-primary" style="width: 100%;">Authenticate</button>
+        <div id="adminLoginStatus" class="form-status"></div>
+      </form>
+
+      <div class="auth-footer">
+        <a href="index.html">← Back to Showroom</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Dashboard (hidden until authenticated) -->
+  <div class="admin-dashboard" id="adminDashboard">
+    <div class="admin-header">
+      <h1><span style="color: var(--accent);">///</span> COMMAND CENTER</h1>
+      <button class="btn-secondary" onclick="adminLogout()">Logout</button>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card">
+        <div class="stat-value" id="statUsers">0</div>
+        <div class="stat-label">Users</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statBookings">0</div>
+        <div class="stat-label">Bookings</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statContacts">0</div>
+        <div class="stat-label">Messages</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statReviews">0</div>
+        <div class="stat-label">Reviews</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statPending">0</div>
+        <div class="stat-label">Pending</div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="admin-tabs">
+      <button class="admin-tab active" data-tab="bookings-tab">Bookings</button>
+      <button class="admin-tab" data-tab="contacts-tab">Messages</button>
+      <button class="admin-tab" data-tab="reviews-tab">Reviews</button>
+      <button class="admin-tab" data-tab="users-tab">Users</button>
+    </div>
+
+    <!-- Bookings Tab -->
+    <div class="admin-tab-panel active" id="bookings-tab">
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>User</th>
+              <th>Vehicle</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="adminBookingsBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Contacts Tab -->
+    <div class="admin-tab-panel" id="contacts-tab">
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Interest</th>
+              <th>Message</th>
+              <th>User</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody id="adminContactsBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Reviews Tab -->
+    <div class="admin-tab-panel" id="reviews-tab">
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>User</th>
+              <th>Vehicle</th>
+              <th>Rating</th>
+              <th>Review</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody id="adminReviewsBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Users Tab -->
+    <div class="admin-tab-panel" id="users-tab">
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Bookings</th>
+              <th>Reviews</th>
+              <th>Joined</th>
+            </tr>
+          </thead>
+          <tbody id="adminUsersBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
