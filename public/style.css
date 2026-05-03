@@ -93,10 +93,11 @@ body {
   top: 50%; left: 50%;
   min-width: 100%; min-height: 100%;
   width: auto; height: auto;
-  transform: translate(-50%, -50%) scale(1.05);
+  transform: translate(-50%, -50%) scale(1.05) translateZ(0);
   object-fit: cover;
-  filter: blur(1px) brightness(0.55) saturate(1.4) contrast(1.1);
+  filter: brightness(0.5) saturate(1.3);
   opacity: 0.75;
+  will-change: transform;
 }
 
 .video-fallback {
@@ -105,7 +106,7 @@ body {
   top: 0; left: 0;
   width: 100%; height: 100%;
   background: url('hero-fallback.png') center/cover no-repeat;
-  filter: blur(1px) brightness(0.4);
+  filter: brightness(0.4);
   opacity: 0.7;
 }
 
@@ -123,6 +124,16 @@ body {
       rgba(3,3,5,0.2) 0%,
       transparent 50%,
       rgba(3,3,5,0.2) 100%);
+}
+
+/* Mobile: kill the video entirely, show static fallback */
+@media (max-width: 768px) {
+  .video-bg {
+    display: none !important;
+  }
+  .video-fallback {
+    display: block !important;
+  }
 }
 
 /* ──────────────────────────────────────────────
@@ -1440,9 +1451,6 @@ footer {
 }
 
 @media (max-width: 768px) {
-  /* Hide video on mobile, show fallback */
-  .video-bg { display: none !important; }
-  .video-fallback { display: block !important; }
 
   .nav-container {
     flex-direction: column;
