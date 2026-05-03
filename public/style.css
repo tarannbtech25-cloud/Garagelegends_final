@@ -126,15 +126,6 @@ body {
       rgba(3,3,5,0.2) 100%);
 }
 
-/* Mobile: kill the video entirely, show static fallback */
-@media (max-width: 768px) {
-  .video-bg {
-    display: none !important;
-  }
-  .video-fallback {
-    display: block !important;
-  }
-}
 
 /* ──────────────────────────────────────────────
    Ambient Glowing Orbs

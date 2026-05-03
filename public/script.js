@@ -1,39 +1,33 @@
 document.addEventListener('DOMContentLoaded', async () => {
 
     // ══════════════════════════════════════════════════════════════
-    // 1. Video Background — Mobile Fallback & Performance
+    // 1. Video Background — Smooth Start & Mobile Support
     // ══════════════════════════════════════════════════════════════
     const videoBg = document.getElementById('videoBg');
     const videoFallback = document.getElementById('videoFallback');
-    const isMobile = window.matchMedia('(max-width: 768px)').matches
-        || /Android|iPhone|iPad|iPod|Opera Mini/i.test(navigator.userAgent);
 
     if (videoBg) {
-        if (isMobile) {
-            // Completely remove the video element to save memory & bandwidth
-            videoBg.pause();
-            videoBg.removeAttribute('src');
-            videoBg.removeAttribute('poster');
-            // Remove all <source> children
-            videoBg.querySelectorAll('source').forEach(s => s.remove());
-            videoBg.load(); // Reset the media element
-            videoBg.style.display = 'none';
-            if (videoFallback) videoFallback.style.display = 'block';
-        } else {
-            // Desktop: Inject the real video source from data-src
-            const source = videoBg.querySelector('source[data-src]');
-            if (source) {
-                source.src = source.getAttribute('data-src');
-                source.removeAttribute('data-src');
-                videoBg.load();
-                videoBg.play().catch(() => {
-                    // If autoplay blocked, show fallback
-                    videoBg.style.display = 'none';
-                    if (videoFallback) videoFallback.style.display = 'block';
-                });
-            }
+        // Start hidden, fade in once playing (dark bg shows while loading)
+        videoBg.style.opacity = '0';
+        videoBg.style.transition = 'opacity 1s ease';
+
+        // When video starts playing, fade it in
+        videoBg.addEventListener('playing', () => {
+            videoBg.style.opacity = '0.75';
+        }, { once: true });
+
+        // Try to play (needed for some mobile browsers)
+        const playPromise = videoBg.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(() => {
+                // Autoplay truly blocked — show static fallback as last resort
+                videoBg.style.display = 'none';
+                if (videoFallback) videoFallback.style.display = 'block';
+            });
         }
     }
+
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
 
     // ══════════════════════════════════════════════════════════════
     // 2. Sticky Navbar — Blur on Scroll
