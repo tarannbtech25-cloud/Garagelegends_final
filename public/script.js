@@ -1,43 +1,112 @@
 document.addEventListener('DOMContentLoaded', async () => {
 
+    // ══════════════════════════════════════════════════════════════
+    // 1. Video Background — Mobile Fallback & Performance
+    // ══════════════════════════════════════════════════════════════
+    const videoBg = document.getElementById('videoBg');
+    const videoFallback = document.getElementById('videoFallback');
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
 
+    if (videoBg) {
+        if (isMobile) {
+            // Disable video on mobile, show static fallback
+            videoBg.pause();
+            videoBg.removeAttribute('src');
+            videoBg.load();
+            videoBg.style.display = 'none';
+            if (videoFallback) videoFallback.style.display = 'block';
+        } else {
+            // Ensure video plays (browser autoplay policies)
+            videoBg.play().catch(() => {
+                // If autoplay fails, show fallback
+                videoBg.style.display = 'none';
+                if (videoFallback) videoFallback.style.display = 'block';
+            });
+        }
+    }
 
     // ══════════════════════════════════════════════════════════════
-    // 2. Intersection Observer (Reveal animations)
+    // 2. Sticky Navbar — Blur on Scroll
     // ══════════════════════════════════════════════════════════════
-    const observer = new IntersectionObserver((entries) => {
+    const navbar = document.getElementById('navbar');
+    if (navbar) {
+        let lastScroll = 0;
+        const scrollThreshold = 60;
+
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+
+            if (currentScroll > scrollThreshold) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+
+            lastScroll = currentScroll;
+        }, { passive: true });
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    // 3. Intersection Observer — Reveal Animations (staggered)
+    // ══════════════════════════════════════════════════════════════
+    const revealObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('active');
+                // Once revealed, stop observing for performance
+                revealObserver.unobserve(entry.target);
             }
         });
-    }, { threshold: 0.1 });
+    }, {
+        threshold: 0.08,
+        rootMargin: '0px 0px -40px 0px'
+    });
 
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
     // ══════════════════════════════════════════════════════════════
-    // 3. 3D Tilt Effect on Cards
+    // 4. 3D Tilt Effect on Glass Cards
     // ══════════════════════════════════════════════════════════════
-    document.querySelectorAll('.glass-card').forEach(card => {
-        const content = card.querySelector('.glass-content');
-        if (!content) return;
+    if (!isMobile) {
+        document.querySelectorAll('.glass-card').forEach(card => {
+            const content = card.querySelector('.glass-content');
+            if (!content) return;
 
-        card.addEventListener('mousemove', (e) => {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            const rotateX = ((y - rect.height / 2) / (rect.height / 2)) * -15;
-            const rotateY = ((x - rect.width / 2) / (rect.width / 2)) * 15;
-            content.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = ((y - centerY) / centerY) * -6;
+                const rotateY = ((x - centerX) / centerX) * 6;
+
+                content.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                content.style.transition = 'transform 0.08s ease-out';
+            });
+
+            card.addEventListener('mouseleave', () => {
+                content.style.transform = `perspective(800px) rotateX(0deg) rotateY(0deg)`;
+                content.style.transition = 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
+            });
         });
+    }
 
-        card.addEventListener('mouseleave', () => {
-            content.style.transform = `rotateX(0deg) rotateY(0deg)`;
+    // ══════════════════════════════════════════════════════════════
+    // 5. Smooth Scroll for Anchor Links
+    // ══════════════════════════════════════════════════════════════
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', (e) => {
+            const target = document.querySelector(anchor.getAttribute('href'));
+            if (target) {
+                e.preventDefault();
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
         });
     });
 
     // ══════════════════════════════════════════════════════════════
-    // 4. Auth State — Check /api/me on every page load
+    // 6. Auth State — Check /api/me on every page load
     // ══════════════════════════════════════════════════════════════
     let currentUser = null;
 
@@ -94,7 +163,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     await checkAuth();
 
     // ══════════════════════════════════════════════════════════════
-    // 5. Signup Form
+    // 7. Signup Form
     // ══════════════════════════════════════════════════════════════
     const signupForm = document.getElementById('signupForm');
     if (signupForm) {
@@ -146,7 +215,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // ══════════════════════════════════════════════════════════════
-    // 6. Login Form
+    // 8. Login Form
     // ══════════════════════════════════════════════════════════════
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
@@ -189,7 +258,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // ══════════════════════════════════════════════════════════════
-    // 7. Contact Form (with auto-fill for logged in users)
+    // 9. Contact Form (with auto-fill for logged in users)
     // ══════════════════════════════════════════════════════════════
     const contactForm = document.getElementById('contactForm');
     if (contactForm) {
@@ -244,7 +313,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // ══════════════════════════════════════════════════════════════
-    // 8. Vehicle Detail Pages — Booking + Reviews
+    // 10. Vehicle Detail Pages — Booking + Reviews
     // ══════════════════════════════════════════════════════════════
     const bookingSection = document.querySelector('.booking-section');
     const reviewsSection = document.querySelector('.reviews-section');
@@ -443,7 +512,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // ══════════════════════════════════════════════════════════════
-    // 9. My Bookings Page
+    // 11. My Bookings Page
     // ══════════════════════════════════════════════════════════════
     const bookingsContainer = document.getElementById('bookingsContainer');
     const emptyBookings = document.getElementById('emptyBookings');
@@ -512,7 +581,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // ══════════════════════════════════════════════════════════════
-    // 10. Admin Page
+    // 12. Admin Page
     // ══════════════════════════════════════════════════════════════
     const adminLoginForm = document.getElementById('adminLoginForm');
     const adminDashboard = document.getElementById('adminDashboard');
